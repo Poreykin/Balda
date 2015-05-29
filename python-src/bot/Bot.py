@@ -56,7 +56,7 @@ class Bot(Player):
         return max(len(variant.__possible_word__) for variant in variants)
 
     def allowed_variants(self, variants, not_allowed_word):
-        return [variant for variant in variants if variant not in self.__not_allowed_words__ and variant != not_allowed_word]
+        return [variant for variant in variants if variant.__possible_word__ not in self.__not_allowed_words__ and variant.__possible_word__ != not_allowed_word]
 
 
     def easy_index_word(self, variants):
@@ -165,7 +165,6 @@ class Bot(Player):
     def run_process(self):
         self.show_board.emit()
         self.__get_used_words__.emit()
-        print(self.__not_allowed_words__)
 
         symbols = [['#' for i in range(self.__width__ + 2)] for j in range(self.__height__ + 2)]
 
@@ -303,12 +302,5 @@ class Bot(Player):
                 elif table[i][j] == '-':
                         self.dfs(table, words, i, j, PRE_VERTEX, cur_used, cur_string, cur_coordinates, False)
 
-        corrects = list()
-
-        for word in words:
-            corrects.append(word)
-
+        corrects = [word for word in words if word.__possible_word__ not in self.__not_allowed_words__]
         return corrects
-
-
-
